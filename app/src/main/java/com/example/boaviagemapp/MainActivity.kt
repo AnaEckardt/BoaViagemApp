@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.boaviagemapp.screens.Menu
+import com.example.boaviagemapp.screens.cadUsuario
+import com.example.boaviagemapp.screens.telaLogin
 import com.example.boaviagemapp.ui.theme.BoaViagemAppTheme
 
 class MainActivity : ComponentActivity() {

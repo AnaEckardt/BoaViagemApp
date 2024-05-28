@@ -1,4 +1,4 @@
-package com.example.boaviagemapp
+package com.example.boaviagemapp.screens
 
 import android.content.Context
 import android.widget.Toast
@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.boaviagemapp.R
 import com.example.boaviagemapp.viewmodels.DadosViewModel
 import kotlinx.coroutines.launch
 @Composable
@@ -64,7 +64,7 @@ fun telaLogin(
             val visivelState = dadosViewModel.uiState.collectAsState()
 
             Image(
-                painter = painterResource(id = com.example.boaviagemapp.R.drawable.viagem),
+                painter = painterResource(id = R.drawable.viagem),
                 contentDescription = "Camera",
                 alignment = Alignment.Center,
                 modifier = Modifier
@@ -114,11 +114,11 @@ fun telaLogin(
                     }) {
                         if (visivelState.value.visivel)
                             Icon(
-                                painterResource(id = com.example.boaviagemapp.R.drawable.visible), ""
+                                painterResource(id = R.drawable.visible), ""
                             )
                         else
                             Icon(
-                                painterResource(id = com.example.boaviagemapp.R.drawable.novisible), ""
+                                painterResource(id = R.drawable.novisible), ""
                             )
                     }
                 },
