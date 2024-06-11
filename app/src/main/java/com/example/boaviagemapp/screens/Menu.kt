@@ -60,8 +60,8 @@ fun Menu(onBack: () ->Unit){
                 )
 
                 BottomNavigationItem(
-                    selected = isSelected(currentDestination, "viagem"),
-                    onClick = { navController.navigate("viagem") },
+                    selected = isSelected(currentDestination, "todasviagens"),
+                    onClick = { navController.navigate("todasviagens") },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.ShoppingCart,
@@ -96,8 +96,8 @@ fun Menu(onBack: () ->Unit){
                 composable("home") {
                     Home()
                 }
-                composable("viagem"){
-                    Viagens()
+                composable("todasviagens"){
+                    Destinos()
                 }
 
                 composable("sobre"){
@@ -112,5 +112,5 @@ fun Menu(onBack: () ->Unit){
 @Preview(showBackground = true)
 @Composable
 fun PreviewMenu() {
-    Menu({})
+    Menu(onBack = {})
 }
