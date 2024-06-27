@@ -1,9 +1,15 @@
 package com.example.boaviagemapp.models
 
-data class Destino (
-    val id: Int=0,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class Destino(
+
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val destino: String = "",
     val inicio: String = "",
     val fim: String = "",
-    val valor: Double,
-    val finalidade : String = "")
+    val valor: Double = 0.0,
+    val finalidade: String = ""
+)

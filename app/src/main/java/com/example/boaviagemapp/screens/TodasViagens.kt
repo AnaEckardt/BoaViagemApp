@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
@@ -44,9 +43,9 @@ fun dest(){
 @Composable
 fun Destinos() {
     val list = listOf(
-        Destino(1, "Alemanha", "10/02/2025", "25/02/2025", 20000.00, "lazer"),
-        Destino(2, "Argentina", "20/10/2024", "23/10/2024", 45000.00, "trabalho"),
-        Destino(3, "Chile", "01/03/2024", "08/03/2024", 5500.00, "trabalho")
+        Destino(1, "Alemanha", "10/02/2025", "25/02/2025", 20.000,  "lazer"),
+        Destino(2, "Argentina", "20/10/2024", "23/10/2024", 15.000, "trabalho"),
+        Destino(3, "Chile", "01/03/2024", "08/03/2024", 10.000, "trabalho")
     )
     val navController = rememberNavController()
     val ctx = LocalContext.current

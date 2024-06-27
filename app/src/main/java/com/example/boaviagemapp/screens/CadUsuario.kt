@@ -11,19 +11,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.boaviagemapp.dataBase.AppDataBase
 import com.example.boaviagemapp.viewmodels.DadosViewModel
+import com.example.boaviagemapp.viewmodels.DadosViewModelFactory
 
 @Composable
 fun cadUsuario(
     onBack: () -> Unit,
-    dadosViewModel: DadosViewModel = viewModel()
-) {//retorno do botao para voltar a main
 
+) {//retorno do botao para voltar a main
+    val dadosViewModel: DadosViewModel = viewModel(
+        factory = DadosViewModelFactory(AppDataBase.getDatabase(LocalContext.current))
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
