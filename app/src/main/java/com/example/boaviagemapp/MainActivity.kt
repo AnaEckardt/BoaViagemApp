@@ -46,16 +46,17 @@ fun MyApp(){
                 navController.navigate("cadUsuario")
             },
                 onLogin = {
-                    navController.navigate("Menu")
+                    navController.navigate("Menu/${it}")
                 })
         }
         composable("cadUsuario"){
             cadUsuario(onBack = {navController.navigateUp()})
         }
-        composable("menu"){
-            Menu(onBack = {
-                navController.navigateUp()
-            })
+        composable("menu/{id}") { entry ->
+            entry.arguments?.getString("id")?.let {
+                it
+                Menu(it)
+            }
         }
     }
 

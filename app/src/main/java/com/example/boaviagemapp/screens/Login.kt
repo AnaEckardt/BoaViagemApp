@@ -35,11 +35,12 @@ import com.example.boaviagemapp.R
 import com.example.boaviagemapp.dataBase.AppDataBase
 import com.example.boaviagemapp.viewmodels.DadosViewModel
 import com.example.boaviagemapp.viewmodels.DadosViewModelFactory
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 @Composable
 fun telaLogin(
     onCadUsuario: ()->Unit,
-    onLogin: () ->Unit,
+    onLogin: (pass: String) ->Unit,
 
 ){
     val db = AppDataBase.getDatabase(LocalContext.current)
@@ -135,15 +136,21 @@ fun telaLogin(
             )
             Button(
                 onClick = {
-                    if (passState.value.senha == "admin" && loginState.value.login == "admin")
-                        onLogin()
-                    else {
-                        coroutineScope.launch {
-                            focus.clearFocus()
-                            snackbarHostState.showSnackbar(
-                                message = "login ou Senha errados",
-                                withDismissAction = true
-                            )
+                    MainScope().launch {
+                        val pass = dadosViewModel.findByLogin(
+                            dadosViewModel.uiState.value.login,
+                            dadosViewModel.uiState.value.senha
+                        )
+                        if (pass != null) {
+                            onLogin(pass.toString())
+                        } else {
+                            coroutineScope.launch {
+                                focus.clearFocus()
+                                snackbarHostState.showSnackbar(
+                                    message = "login ou Senha errados",
+                                    withDismissAction = true
+                                )
+                            }
                         }
                     }
                 },
@@ -167,5 +174,7 @@ fun telaLogin(
         }
     }
 }
+
+//
 fun Context.toast(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

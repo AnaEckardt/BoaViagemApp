@@ -10,6 +10,6 @@ data class Destino(
     val destino: String = "",
     val inicio: String = "",
     val fim: String = "",
-    val valor: Double = 0.0,
+    val valor: Double = 0.00,
     val finalidade: String = ""
 )

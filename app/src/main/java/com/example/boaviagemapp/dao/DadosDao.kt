@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 
-    @Dao
+    @Dao //anotação para indicar que é uma classe DAO, e precisa ser uma interface;
     interface DadosDao {
         @Insert
         fun insert(dados: Dados) : Long
@@ -20,14 +20,14 @@ import kotlinx.coroutines.flow.Flow
         fun update(dados: Dados)
 
         @Upsert //insere ou altera depende se recebe o id ou nao
-        suspend fun upsert(dados: Dados) : Long //suspend diz que pode ser executado fora da tread principal
-
+        suspend fun upsert(dados: Dados) : Long //suspend: //pode ser executado numa corrotina, fora da thread principal
         @Query("select * from dados p order by p.id")
-        fun getAll() : Flow<List<Dados>> //flow monitora o banco e traz as alterações
+        fun getAll() : Flow<List<Dados>> //flow monitora o banco e trás as alterações (alteração de estado)
 
         @Query("select * from dados p where p.id = :id")
-        fun findById(id : Long) : Dados? //interrogação poder ser que nao retorne o produto
-
+        suspend fun findById(id : Long) : Dados? //interrogação poder ser que nao retorne o produto
+        @Query("select * from dados p where p.login = :login")
+        suspend fun findByLogin(login : String) : Dados?
         @Delete
-        fun delete (dados: Dados)
+        suspend fun delete (dados: Dados)
     }

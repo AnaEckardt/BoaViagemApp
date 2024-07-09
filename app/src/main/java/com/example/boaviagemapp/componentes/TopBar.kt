@@ -13,10 +13,10 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopBar(){
+fun MyTopBar(p:String, onBack:()->Unit){
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onBack()}) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = null
@@ -24,7 +24,7 @@ fun MyTopBar(){
             }
         },
         title = {
-            Text(text = "Nova Viagem")
+            Text(text = "p")
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,

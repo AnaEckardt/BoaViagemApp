@@ -1,5 +1,6 @@
 package com.example.boaviagemapp.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,40 +15,53 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.boaviagemapp.componentes.MyTopBar
+import com.example.boaviagemapp.dataBase.AppDataBase
+import com.example.boaviagemapp.viewmodels.DestinoViewModel
+import com.example.boaviagemapp.viewmodels.DestinoViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Viagens(onBack: ()->Unit) {
+fun Viagens(onBack: ()->Unit, id : Long?) {
     Scaffold(
         topBar = {
-            MyTopBar()
+            MyTopBar("Nova Viagem") { onBack() }
         }
-    ) {
-        var showDatePickerDialogInicio = remember {
+    ) { it ->
+        val destinoViewModel: DestinoViewModel = viewModel(
+            factory = DestinoViewModelFactory(AppDataBase.getDatabase(LocalContext.current))
+        )
+        LaunchedEffect(id) {
+            if (id != null){
+                val viagem = destinoViewModel.findById(id)
+                viagem?.let { destinoViewModel.setUiState(it) }
+            }
+        }
+        val state = destinoViewModel.uiState.collectAsState()
+
+        val showDatePickerDialogInicio = remember {
             mutableStateOf(false)
-        }
-        var selectedDateInicio = remember {
-            mutableStateOf("")
         }
         val datePickerStateInicio = rememberDatePickerState()
-        var showDatePickerDialogFinal = remember {
+        val showDatePickerDialogFinal = remember {
             mutableStateOf(false)
-        }
-        var selectedDateFinal = remember {
-            mutableStateOf("")
         }
         val datePickerStateFinal = rememberDatePickerState()
         Column(
@@ -67,8 +81,8 @@ fun Viagens(onBack: ()->Unit) {
             }
             Row {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = state.value.destino,
+                    onValueChange = {destinoViewModel.updateDestino(it)},
                     modifier = Modifier
                         .weight(4f)
                         .padding(top = 10.dp)
@@ -87,8 +101,8 @@ fun Viagens(onBack: ()->Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = false,
-                    onClick = {},
+                    selected = state.value.finalidade == "lazer", // it.value.tipo == "lazer"
+                    onClick = {destinoViewModel.updateFinalidade("lazer")}, /// vm.updateFinalidade("lazer")
                     modifier = Modifier
                         .weight(0.5f)
                 )
@@ -100,8 +114,8 @@ fun Viagens(onBack: ()->Unit) {
                         .weight(1.5f)
                 )
                 RadioButton(
-                    selected = true,
-                    onClick = {},
+                    selected = state.value.finalidade == "negocio", // it.value.tipo == "negocio"
+                    onClick = {destinoViewModel.updateFinalidade("negocio")}, /// vm.updateFinalidade("negocio")
                     modifier = Modifier
                         .weight(0.5f)
                 )
@@ -132,7 +146,7 @@ fun Viagens(onBack: ()->Unit) {
                                 onClick = {
                                     datePickerStateInicio
                                         .selectedDateMillis?.let { millis ->
-                                            selectedDateInicio.value = millis.toBrazilianDateFormat()
+                                            destinoViewModel.updateInicio(millis.toBrazilianDateFormat())
                                         }
                                     showDatePickerDialogInicio.value = false
                                 }) {
@@ -146,8 +160,8 @@ fun Viagens(onBack: ()->Unit) {
                     }
                 }
                 OutlinedTextField(
-                    value = selectedDateInicio.value,
-                    onValueChange = { },
+                    value = state.value.inicio,
+                    onValueChange = {destinoViewModel.updateInicio(it)},
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
@@ -178,7 +192,7 @@ fun Viagens(onBack: ()->Unit) {
                                 onClick = {
                                     datePickerStateFinal
                                         .selectedDateMillis?.let { millis ->
-                                            selectedDateFinal.value = millis.toBrazilianDateFormat()
+                                            destinoViewModel.updadeFim(millis.toBrazilianDateFormat())
                                         }
                                     showDatePickerDialogFinal.value = false
                                 }) {
@@ -192,8 +206,8 @@ fun Viagens(onBack: ()->Unit) {
                     }
                 }
                 OutlinedTextField(
-                    value = selectedDateFinal.value,
-                    onValueChange = { },
+                    value = state.value.fim,
+                    onValueChange = {destinoViewModel.updadeFim(it)},
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
@@ -217,8 +231,8 @@ fun Viagens(onBack: ()->Unit) {
             }
             Row {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = state.value.valor.toString(),
+                    onValueChange = {destinoViewModel.updateValor(it.toDouble())},
                     modifier = Modifier
                         .weight(4f)
                         .padding(top = 10.dp)
@@ -228,7 +242,10 @@ fun Viagens(onBack: ()->Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Button(
-                    onClick = { onBack() },
+                    onClick = {
+                        destinoViewModel.save()
+                        onBack()
+                    },
                     modifier = Modifier
                         .padding(top = 35.dp)
                         .weight(2f)
